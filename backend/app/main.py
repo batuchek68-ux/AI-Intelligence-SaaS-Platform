@@ -2,22 +2,17 @@ from fastapi import FastAPI
 from app.services.news_service import fetch_news
 from app.services.trend_service import analyze_trends
 from app.services.ai_service import generate_insights
+from app.services.dashboard_service import build_dashboard
 
-app = FastAPI(title="Global Intelligence V11")
+app = FastAPI(title="Global Intelligence V11 PRO")
 
-@app.get("/")
-def home():
-    return {"status": "ok", "version": "v11"}
-
-@app.get("/run")
-def run_pipeline():
+@app.get("/api/run")
+def run():
 
     news = fetch_news()
     trends = analyze_trends(news)
     insights = generate_insights(trends)
 
-    return {
-        "news_count": len(news),
-        "trends": trends,
-        "insights": insights
-    }
+    dashboard = build_dashboard(news, trends, insights)
+
+    return dashboard
